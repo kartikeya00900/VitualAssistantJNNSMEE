@@ -1,28 +1,28 @@
 import speech_recognition as sr
+import tkinter as tk
 
-# Initialize the recognizer
-r = sr.Recognizer()
-
-# Define a function for speech recognition
 def recognize_speech():
+    recognizer = sr.Recognizer()
     with sr.Microphone() as source:
         print("Listening...")
-        audio = r.listen(source)
+        audio = recognizer.listen(source)
     try:
-        print("Recognizing...")
-        text = r.recognize_google(audio)
-        return text
+        recognized_text = recognizer.recognize_google(audio)
+        print("Recognized text:", recognized_text)
+        # Perform actions based on recognized text
+        # e.g. call a function to handle the recognized command
     except sr.UnknownValueError:
-        print("Sorry, I could not understand you.")
-    except sr.RequestError:
-        print("Sorry, I am having trouble with speech recognition.")
-    return None
+        print("Could not understand audio")
+    except sr.RequestError as e:
+        print("Error: {0}".format(e))
 
-# Main loop for listening to user input
-while True:
-    # Call the speech recognition function
-    text = recognize_speech()
-    if text is not None:
-        print("You said: ", text)
-        # Add your virtual assistant logic here
-        # Example: if text == "hello": print("Hello, how can I help you?")
+def on_button_click():
+    recognize_speech()
+
+root = tk.Tk()
+root.title("Virtual Assistant")
+
+button = tk.Button(root, text="Click to Speak", command=on_button_click)
+button.pack()
+
+root.mainloop()
